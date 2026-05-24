@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { FC, ReactNode, CSSProperties } from "react";
 import { SiReact, SiTypescript, SiTailwindcss, SiGithub, SiFastly } from "react-icons/si";
-import { FaLinkedin, FaCode, FaBolt, FaWandMagicSparkles } from "react-icons/fa6";
+import { FaLinkedin, FaCode, FaBolt, FaWandMagicSparkles, FaWhatsapp } from "react-icons/fa6";
 /* ─────────────────────────── Types ─────────────────────────── */
 
 interface CounterProps {
@@ -56,6 +56,7 @@ interface ContactLinkProps {
   icon: ReactNode;
   label: string;
   color: string;
+  url: string;
 }
 
 interface Particle {
@@ -1018,6 +1019,7 @@ const VibrantPulse: FC = () => {
           <ContactLink icon={<SiGithub />}   label="GITHUB"   color="#6e7681" />
           <ContactLink icon={<FaLinkedin />} label="LINKEDIN" color="#0077b5" />
           <ContactLink icon={<SiFastly />}   label="FASTWORK" color="#00bcd4" />
+          <ContactLink icon={<FaWhatsapp />} label="WHATSAPP" color="#25d366" />
         </div>
         <div style={{ marginTop: "5rem", color: "rgba(255,255,255,0.2)", fontSize: "0.75rem", letterSpacing: "0.1em" }}>
           © 2025 VIBRANTPULSE · Built with React + TypeScript + Tailwind

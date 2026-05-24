@@ -250,6 +250,7 @@ const Typewriter: FC<TypewriterProps> = ({ words }) => {
 const Nav: FC<NavProps> = ({ active, go }) => {
   const links: string[] = ["Home", "Features", "Stack", "Performance", "Timeline", "Contact"];
   const [scrolled, setScrolled] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fn = (): void => setScrolled(window.scrollY > 50);
@@ -257,37 +258,174 @@ const Nav: FC<NavProps> = ({ active, go }) => {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Tutup sidebar saat klik di luar
+  useEffect(() => {
+    if (!open) return;
+    const fn = (e: MouseEvent): void => {
+      const target = e.target as HTMLElement;
+      if (!target.closest("#sidebar") && !target.closest("#hamburger")) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, [open]);
+
+  const handleNav = (l: string): void => {
+    go(l);
+    setOpen(false);
+  };
+
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      height: 64, display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 5vw",
-      background: scrolled ? "rgba(10,15,30,0.9)" : "transparent",
-      backdropFilter: scrolled ? "blur(20px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(0,188,212,0.12)" : "none",
-      transition: "all 0.4s",
-    }}>
-      <div style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em" }}>
-        <span style={{ color: "#fff" }}>MY</span>
-        <span style={{ background: "linear-gradient(90deg,#00bcd4,#76ff03)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          PORTOFOLIO
-        </span>
-      </div>
-      <div style={{ display: "flex", gap: "1.8rem" }}>
-        {links.map((l) => (
-          <button key={l} onClick={() => go(l)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            color: active === l ? "#00bcd4" : "rgba(255,255,255,0.5)",
-            fontWeight: active === l ? 700 : 400,
-            fontSize: "0.78rem", letterSpacing: "0.1em", textTransform: "uppercase",
-            borderBottom: active === l ? "2px solid #00bcd4" : "2px solid transparent",
-            paddingBottom: 2, transition: "all 0.2s", fontFamily: "inherit",
-          }}>
+    <>
+      {/* ── Navbar Bar ── */}
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
+        height: 64, display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 5vw",
+        background: scrolled ? "rgba(10,15,30,0.92)" : "rgba(10,15,30,0.4)",
+        backdropFilter: "blur(20px)",
+        borderBottom: "1px solid rgba(0,188,212,0.1)",
+        transition: "all 0.4s",
+      }}>
+        {/* Logo */}
+        <div style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em" }}>
+          <span style={{ color: "#fff" }}>MY</span>
+          <span style={{ background: "linear-gradient(90deg,#00bcd4,#76ff03)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            PORTOFOLIO
+          </span>
+        </div>
+
+        {/* Hamburger Button */}
+        <button
+          id="hamburger"
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Toggle menu"
+          style={{
+            cursor: "pointer",
+            display: "flex", flexDirection: "column", justifyContent: "center",
+            alignItems: "center", gap: 5, width: 40, height: 40,
+            borderRadius: 10, padding: "6px 8px",
+            background: open ? "rgba(0,188,212,0.12)" : "rgba(255,255,255,0.05)",
+            border: `1px solid ${open ? "rgba(0,188,212,0.4)" : "rgba(255,255,255,0.1)"}`,
+            transition: "all 0.3s",
+          } as CSSProperties}
+        >
+          {/* 3 garis hamburger dengan animasi transform ke X */}
+          <span style={{
+            display: "block", width: 20, height: 2, borderRadius: 2,
+            background: open ? "#00bcd4" : "rgba(255,255,255,0.8)",
+            transform: open ? "translateY(7px) rotate(45deg)" : "none",
+            transition: "all 0.3s ease",
+          }} />
+          <span style={{
+            display: "block", width: 20, height: 2, borderRadius: 2,
+            background: open ? "#00bcd4" : "rgba(255,255,255,0.8)",
+            opacity: open ? 0 : 1,
+            transition: "all 0.3s ease",
+          }} />
+          <span style={{
+            display: "block", width: 20, height: 2, borderRadius: 2,
+            background: open ? "#00bcd4" : "rgba(255,255,255,0.8)",
+            transform: open ? "translateY(-7px) rotate(-45deg)" : "none",
+            transition: "all 0.3s ease",
+          }} />
+        </button>
+      </nav>
+
+      {/* ── Overlay gelap di belakang sidebar ── */}
+      <div
+        onClick={() => setOpen(false)}
+        style={{
+          position: "fixed", inset: 0, zIndex: 250,
+          background: "rgba(0,0,0,0.55)",
+          backdropFilter: "blur(2px)",
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? "auto" : "none",
+          transition: "opacity 0.35s ease",
+        }}
+      />
+
+      {/* ── Sidebar ── */}
+      <aside
+        id="sidebar"
+        style={{
+          position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 300,
+          width: 280,
+          background: "rgba(5,8,20,0.97)",
+          backdropFilter: "blur(30px)",
+          borderLeft: "1px solid rgba(0,188,212,0.15)",
+          boxShadow: open ? "-20px 0 60px rgba(0,0,0,0.6)" : "none",
+          transform: open ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.4s cubic-bezier(.23,1,.32,1)",
+          display: "flex", flexDirection: "column",
+          padding: "80px 0 40px",
+          overflowY: "auto",
+        }}
+      >
+        {/* Label kecil di atas */}
+        <div style={{
+          padding: "0 2rem 1.5rem",
+          fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.25em",
+          color: "rgba(255,255,255,0.25)", textTransform: "uppercase",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          marginBottom: "1rem",
+        }}>
+          Navigasi
+        </div>
+
+        {/* Menu Items */}
+        {links.map((l, i) => (
+          <button
+            key={l}
+            onClick={() => handleNav(l)}
+            style={{
+              cursor: "pointer",
+              textAlign: "left", padding: "0.9rem 2rem",
+              color: active === l ? "#00bcd4" : "rgba(255,255,255,0.6)",
+              fontWeight: active === l ? 800 : 400,
+              fontSize: "1rem", letterSpacing: "0.08em",
+              textTransform: "uppercase", fontFamily: "inherit",
+              border: "none",
+              borderLeft: active === l ? "3px solid #00bcd4" : "3px solid transparent",
+              background: active === l ? "rgba(0,188,212,0.06)" : "transparent",
+              transition: "all 0.2s ease",
+              display: "flex", alignItems: "center", gap: "1rem",
+              width: "100%",
+            } as CSSProperties}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "#00bcd4";
+              (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,188,212,0.05)";
+            }}
+            onMouseLeave={(e) => {
+              if (active !== l) {
+                (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+                (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+              }
+            }}
+          >
+            {/* Nomor urut */}
+            <span style={{
+              fontSize: "0.65rem", color: active === l ? "#00bcd4" : "rgba(255,255,255,0.2)",
+              fontFamily: "'Space Mono', monospace", minWidth: 20,
+            }}>
+              0{i + 1}
+            </span>
             {l}
           </button>
         ))}
-      </div>
-    </nav>
+
+        {/* Footer sidebar */}
+        <div style={{
+          marginTop: "auto", padding: "1.5rem 2rem 0",
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+          fontSize: "0.7rem", color: "rgba(255,255,255,0.2)",
+          letterSpacing: "0.1em",
+        }}>
+          © 2025 VIBRANTPULSE
+        </div>
+      </aside>
+    </>
   );
 };
 

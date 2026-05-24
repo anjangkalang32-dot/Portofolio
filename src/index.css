@@ -1,0 +1,18 @@
+/* Efek Kamera Cinematic Zoom In perlahan */
+@keyframes cinematicZoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* Efek Lampu Neon ITB Pulse */
+@keyframes neonPulse {
+  0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 5px #00bcd4); }
+  50% { opacity: 1; filter: drop-shadow(0 0 20px #00bcd4) drop-shadow(0 0 30px #76ff03); }
+}
+
+/* Efek Bintang/Partikel Malam */
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}

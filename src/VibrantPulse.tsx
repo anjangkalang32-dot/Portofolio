@@ -619,7 +619,7 @@ const VibrantPulse: FC = () => {
       ::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 10px; }
     `;
     document.head.appendChild(style);
-    return () => document.head.removeChild(style);
+    return () => { document.head.removeChild(style); };
   }, []);
 
   const go = (id: string): void => {
@@ -845,7 +845,7 @@ const VibrantPulse: FC = () => {
           position: "absolute", bottom: "15%", left: "50%", transform: "translateX(-50%)",
           width: "220px", height: "0",
           borderLeft: "110px solid transparent", borderRight: "110px solid transparent",
-          borderBottom: "70px solid rgba(15, 23, 42, 0.9)", position: "absolute", zIndex: 1
+          borderBottom: "70px solid rgba(15, 23, 42, 0.9)", zIndex: 1
         }} />
         {/* Ornamen Atap Bertumpuk khas ITB */}
         <div style={{

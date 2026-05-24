@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, FC, ReactNode, CSSProperties } from "react";
-import { SiReact, SiTypescript, SiTailwindcss, SiVite, SiFramer, SiGithub, SiFastly } from "react-icons/si";
+import { useState, useEffect, useRef } from "react";
+import type { FC, ReactNode, CSSProperties } from "react";
+import { SiReact, SiTypescript, SiTailwindcss, SiGithub, SiFastly } from "react-icons/si";
 import { FaLinkedin, FaCode, FaBolt, FaWandMagicSparkles } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
 /* ─────────────────────────── Types ─────────────────────────── */
 
 interface CounterProps {
@@ -49,13 +49,6 @@ interface PerfBarProps {
   value: string;
   pct: number;
   gradient: string;
-  delay?: number;
-}
-
-interface TimelineItemProps {
-  dot: string;
-  label: string;
-  sub: string;
   delay?: number;
 }
 
@@ -537,34 +530,6 @@ const Table: FC = () => {
           <div style={{ padding: "0.9rem 1.5rem", color: "#76ff03", fontSize: "0.88rem", fontWeight: 600 }}>{n}</div>
         </div>
       ))}
-    </div>
-  );
-};
-
-/* ─────────────────────────── TimelineItem ─────────────────────────── */
-
-const TimelineItem: FC<TimelineItemProps> = ({ dot, label, sub, delay = 0 }) => {
-  const [ref, inView] = useInView();
-
-  return (
-    <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      style={{
-        flex: 1, textAlign: "center",
-        opacity: inView ? 1 : 0,
-        transform: inView ? "none" : "translateY(30px)",
-        transition: `all 0.6s ease ${delay}ms`,
-      }}
-    >
-      <div style={{
-        width: 22, height: 22, borderRadius: "50%", background: dot,
-        margin: "0 auto 1rem", boxShadow: `0 0 20px ${dot}99`,
-        border: `3px solid ${dot}44`,
-        animation: "float 3s ease-in-out infinite",
-        animationDelay: `${delay}ms`,
-      }} />
-      <div style={{ fontWeight: 800, marginBottom: 6 }}>{label}</div>
-      <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem" }}>{sub}</div>
     </div>
   );
 };
